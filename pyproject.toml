@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "deprecated-parameters"
+dynamic = ["version"]
+description = "Deprecation of parameters in function and method signatures."
+authors = [
+    {name = "Mauricio Villegas", email = "mauricio@omnius.com"},
+]
+readme = "README.rst"
+license = {file = "LICENSE.rst"}
+requires-python = ">=3.8"
+
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+]
+
+
+[project.optional-dependencies]
+mypy = [
+    "mypy>=1.15.0",
+]
+test = [
+    "pytest>=6.2.5",
+    "pytest-cov>=4.0.0",
+]
+dev = [
+    "pre-commit>=2.19.0",
+    "tox>=3.25.0",
+    "build>=0.10.0",
+]
+
+[project.urls]
+GitHub = "https://github.com/mauvilsa/deprecated-parameters"
+PyPI = "https://pypi.org/project/deprecated-parameters"
+
+
+[tool.setuptools]
+platforms = ["Any"]
+packages = ["deprecated_parameters", "deprecated_parameters_tests"]
+
+[tool.setuptools.dynamic]
+version = {attr = "deprecated_parameters.__version__"}
+
+[tool.setuptools.package-data]
+deprecated_parameters = ["py.typed"]
+
+
+[tool.pytest.ini_options]
+addopts = "-s"
+testpaths = ["deprecated_parameters_tests"]
+
+
+[tool.coverage.run]
+relative_files = true
+source = ["deprecated_parameters"]
+
+
+[tool.mypy]
+warn_unused_ignores = true
+
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # https://pypi.org/project/pycodestyle
+    "F",  # https://pypi.org/project/pyflakes
+    "I",  # https://pypi.org/project/isort
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+
+[tool.black]
+line-length = 120
+
+
+[tool.typos.default.extend-identifiers]
+Villegas = "Villegas"
+
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py{38,39,310,311,312,313}
+skip_missing_interpreters = true
+
+[testenv]
+extras = test
+changedir = deprecated_parameters_tests
+commands = python -m pytest {posargs}
+usedevelop = true
+"""
