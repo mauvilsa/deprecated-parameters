@@ -35,9 +35,10 @@ classifiers = [
 
 [project.optional-dependencies]
 mypy = [
-    "mypy>=1.15.0",
+    "mypy>=1.14.1",
 ]
 test = [
+    "deprecated-parameters[mypy]",
     "pytest>=6.2.5",
     "pytest-cov>=4.0.0",
 ]
@@ -109,5 +110,4 @@ skip_missing_interpreters = true
 extras = test
 changedir = deprecated_parameters_tests
 commands = python -m pytest {posargs}
-usedevelop = true
 """

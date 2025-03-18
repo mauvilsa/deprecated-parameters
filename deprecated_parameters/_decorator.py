@@ -13,9 +13,9 @@ __all__ = [
 ]
 
 default_when = "the future"
-default_remove_message = 'Argument "%(old_name)s" to "%(func)s" is deprecated and will be removed in %(when)s'
+default_remove_message = 'Argument "%(old_name)s" for "%(func)s" is deprecated and will be removed in %(when)s'
 default_rename_message = (
-    'Argument "%(old_name)s" to "%(func)s" is deprecated, it has been renamed to "%(new_name)s" '
+    'Argument "%(old_name)s" for "%(func)s" is deprecated, it has been renamed to "%(new_name)s" '
     'and "%(old_name)s" will be removed in %(when)s'
 )
 
@@ -25,13 +25,11 @@ F = TypeVar("F", bound=Callable)
 class ParameterDeprecation:
     def __init__(
         self,
-        *args,
+        *,
         when,
         message,
         transform,
     ) -> None:
-        if args:
-            raise TypeError(f"{self.__class__.__name__} does not accept positional arguments.")
         self.when = when
         self.message = message
         self.transform = transform
@@ -40,7 +38,7 @@ class ParameterDeprecation:
 class ParameterRemove(ParameterDeprecation):
     def __init__(
         self,
-        *args,
+        *,
         old_name: str,
         when: str = default_when,
         message: str = default_remove_message,
@@ -49,13 +47,13 @@ class ParameterRemove(ParameterDeprecation):
         if transform not in ["remove", None]:
             raise ValueError("transform must be 'remove' or None.")
         self.old_name = old_name
-        super().__init__(*args, when=when, message=message, transform=transform)
+        super().__init__(when=when, message=message, transform=transform)
 
 
 class ParameterRename(ParameterDeprecation):
     def __init__(
         self,
-        *args,
+        *,
         new_name: str,
         old_name: str,
         when: str = default_when,
@@ -66,7 +64,7 @@ class ParameterRename(ParameterDeprecation):
             raise ValueError("transform must be 'reassign' or None.")
         self.new_name = new_name
         self.old_name = old_name
-        super().__init__(*args, when=when, message=message, transform=transform)
+        super().__init__(when=when, message=message, transform=transform)
 
 
 @dataclass
@@ -109,7 +107,7 @@ def deprecated_parameters(*deprecations: Union[ParameterRemove, ParameterRename]
             params = list(inspect.signature(func).parameters.keys())
             for rename in deprecation.renamed:
                 if rename.new_name not in params:
-                    raise ValueError(f"Parameter '{rename.new_name}' not found in signature of {func}.")
+                    raise ValueError(f"Parameter '{rename.new_name}' not found in signature of {func.__name__}.")
 
         _deprecations_register[fullname] = deprecation
 
