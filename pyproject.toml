@@ -10,23 +10,26 @@ description = "Deprecation of parameters in function and method signatures."
 authors = [
     {name = "Mauricio Villegas", email = "mauricio@omnius.com"},
 ]
-readme = "README.rst"
-license = {file = "LICENSE.rst"}
-requires-python = ">=3.8"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+
+dependencies = [
+    "packaging>=22.0",
+]
 
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS",
     "Operating System :: Microsoft :: Windows",
@@ -37,8 +40,11 @@ classifiers = [
 mypy = [
     "mypy>=1.14.1",
 ]
+doc = [
+    "sphinx>=7.0.0",
+]
 test = [
-    "deprecated-parameters[mypy]",
+    "deprecated-parameters[mypy,doc]",
     "pytest>=6.2.5",
     "pytest-cov>=4.0.0",
 ]
@@ -46,11 +52,17 @@ dev = [
     "pre-commit>=2.19.0",
     "tox>=3.25.0",
     "build>=0.10.0",
+    "twine>=4.0.0",
+    "bump2version>=1.0.1",
 ]
+
+[project.scripts]
+deprecated-parameters-stubgen = "deprecated_parameters._stubgen:main"
 
 [project.urls]
 GitHub = "https://github.com/mauvilsa/deprecated-parameters"
 PyPI = "https://pypi.org/project/deprecated-parameters"
+Changelog = "https://github.com/mauvilsa/deprecated-parameters/blob/main/CHANGELOG.md"
 
 
 [tool.setuptools]
@@ -79,21 +91,15 @@ warn_unused_ignores = true
 
 
 [tool.ruff]
+fix = true
 line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E", "W",  # https://pypi.org/project/pycodestyle
-    "F",  # https://pypi.org/project/pyflakes
-    "I",  # https://pypi.org/project/isort
+    "E", "W",  # pycodestyle
+    "F",  # pyflakes
+    "I",  # isort
 ]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-
-[tool.black]
-line-length = 120
 
 
 [tool.typos.default.extend-identifiers]
@@ -103,7 +109,7 @@ Villegas = "Villegas"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{38,39,310,311,312,313}
+envlist = py{310,311,312,313,314}
 skip_missing_interpreters = true
 
 [testenv]
